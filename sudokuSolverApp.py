@@ -1,6 +1,7 @@
 from tkinter import *
 import numpy as np
 import random
+import time
 
 class TTT(Tk):
     def __init__(self):
@@ -15,7 +16,7 @@ class TTT(Tk):
                 lab = Label(text=" ", width=2, font=("Helvetica", 30), relief="flat",bd= 4)
                 canvas.create_window(((row*res[1]//10)+42)+(row//3*19), ((col*res[1]//10)+42)+(col//3*19), window=lab)
                 lab.bind("<Button-1>", self.callback)
-                lab.num = [row, col] # the integer that identifies the label
+                lab.num = [row, col]  # the integer that identifies the label
                 self.labrow.append(lab)
             self.lablist.append(self.labrow)
         canvas.create_line(0, 0, res[1], 0, fill="black", width="20")
@@ -28,9 +29,7 @@ class TTT(Tk):
         canvas.create_line(0, res[1]//3, res[1], res[1]//3, fill="black", width="10")
         canvas.create_line(0, (res[1]//3)*2, res[1], (res[1]//3)*2, fill="black", width="10")
 
-        self.board = []
-        for i in range(9):
-            self.board.append([0] * 9)
+        self.board = np.zeros((9, 9), dtype=np.int8)
 
         canvas = Canvas(bg="white", height=100, width=600)
         canvas.pack()
@@ -51,21 +50,19 @@ class TTT(Tk):
         for labrow in self.lablist:
             for lab in labrow:
                 lab.configure(text=" ")
+        self.board = np.zeros((9, 9), dtype=np.int8)
 
 
     def solve(self):
-        board = self.board
         def isvalid(board):
-            boardcopy = np.array(board ,dtype=np.int8)
-
             for i in range(0, 9, 3):
                 for j in range(0, 9, 3):
-                    if np.sum(boardcopy[j:j + 3, i:i + 3] == (k for k in range(1,10))) > 1:
+                    if np.sum(board[j:j + 3, i:i + 3] == (k for k in range(1, 10))) > 1:
                         return 0
 
             for i in range(len(board)):
                 for j in range(1, 10):
-                    if np.sum(boardcopy[i, :] == j) > 1 or np.sum(boardcopy[:, i] == j) > 1:
+                    if np.sum(board[i, :] == j) > 1 or np.sum(board[:, i] == j) > 1:
                         return 0
             return 1
 
@@ -83,8 +80,6 @@ class TTT(Tk):
             if isvalid(board) == 0:
                 return 0
             if done(board, coords):
-                for i in range(len(board)):
-                    print(board[i])
                 return 1
             else:
                 for i in range(1, 10):
@@ -94,11 +89,8 @@ class TTT(Tk):
                     if (sodokusolve(board)):
                         return 1
                     board[coords[0]][coords[1]] = 0
-
-        if (not sodokusolve(board)):
+        if not sodokusolve(self.board):
             print("Board is unsolvable")
-            for i in range(len(board)):
-                print(board[i])
         else:
             print("SUCCESS!")
 
