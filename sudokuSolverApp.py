@@ -19,6 +19,7 @@ class TTT(Tk):
                 lab.num = [row, col]  # the integer that identifies the label
                 self.labrow.append(lab)
             self.lablist.append(self.labrow)
+            
         canvas.create_line(0, 0, res[1], 0, fill="black", width="20")
         canvas.create_line(0, 0, 0, res[1], fill="black", width="20")
         canvas.create_line(res[1], 0, res[1], res[1], fill="black", width="10")
@@ -57,8 +58,9 @@ class TTT(Tk):
         def isvalid(board):
             for i in range(0, 9, 3):
                 for j in range(0, 9, 3):
-                    if np.sum(board[j:j + 3, i:i + 3] == (k for k in range(1, 10))) > 1:
-                        return 0
+                    for k in range(1,10):
+                        if np.sum(board[j:j + 3, i:i + 3] == k) > 1:
+                            return 0
 
             for i in range(len(board)):
                 for j in range(1, 10):
