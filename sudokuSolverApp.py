@@ -13,7 +13,7 @@ class TTT(Tk):
         for row in range(9):
             self.labrow = []
             for col in range(9):
-                lab = Label(text=" ", width=2, font=("Helvetica", 30), relief="flat",bd= 4)
+                lab = Label(text=" ", width=2, font=("Helvetica", 30), relief="sunken",bd= 4)
                 canvas.create_window(((row*res[1]//10)+42)+(row//3*19), ((col*res[1]//10)+42)+(col//3*19), window=lab)
                 lab.bind("<Button-1>", self.callback)
                 lab.num = [row, col]  # the integer that identifies the label
@@ -88,13 +88,17 @@ class TTT(Tk):
                     board[coords[0]][coords[1]] = i
                     lab = self.lablist[coords[1]][coords[0]]  # which label was clicked
                     lab.configure(text=str(i))  # make mark on the graphical board
+                    lab.update()
                     if (sodokusolve(board)):
                         return 1
                     board[coords[0]][coords[1]] = 0
+                time.sleep(.005)
         if not sodokusolve(self.board):
             print("Board is unsolvable")
+            print(self.board)
         else:
             print("SUCCESS!")
+            print(self.board)
 
     def randomBoard(self):
         pass
