@@ -1,6 +1,5 @@
 from tkinter import *
 import numpy as np
-import random
 import time
 
 class TTT(Tk):
@@ -15,7 +14,7 @@ class TTT(Tk):
             for col in range(9):
                 lab = Label(text=" ", width=2, font=("Helvetica", 30), relief="sunken",bd= 4)
                 canvas.create_window(((row*res[1]//10)+42)+(row//3*19), ((col*res[1]//10)+42)+(col//3*19), window=lab)
-                lab.bind("<Button-1>", self.callback)
+                lab.bind("<Button-1>", self.setfocus)
                 lab.num = [row, col]  # the integer that identifies the label
                 self.labrow.append(lab)
             self.lablist.append(self.labrow)
@@ -32,10 +31,10 @@ class TTT(Tk):
 
         self.board = np.zeros((9, 9), dtype=np.int8)
 
-        canvas = Canvas(bg="white", height=100, width=600)
+        canvas = Canvas(bg="white", height=170, width=600)
         canvas.pack()
 
-        self.but1 = Button(text="Quit", font=("Helvetica", 20),
+        self.but1 = Button(text=" Quit ", font=("Helvetica", 20),
                            relief="groove", command=self.quit)
         canvas.create_window(100, 50, window=self.but1)
 
@@ -46,6 +45,10 @@ class TTT(Tk):
         self.but3 = Button(text="Solve", font=("Helvetica", 20),
                            relief="groove", command=self.solve)
         canvas.create_window(500, 50, window=self.but3)
+
+        self.but4 = Button(text=" Help ", font=("Helvetica", 20),
+                           relief="groove", command=self.help)
+        canvas.create_window(300, 125, window=self.but4)
 
     def reset(self):
         for labrow in self.lablist:
@@ -92,7 +95,7 @@ class TTT(Tk):
                     if (sodokusolve(board)):
                         return 1
                     board[coords[0]][coords[1]] = 0
-                time.sleep(.005)
+                time.sleep(.01)
         if not sodokusolve(self.board):
             print("Board is unsolvable")
             print(self.board)
@@ -100,18 +103,25 @@ class TTT(Tk):
             print("SUCCESS!")
             print(self.board)
 
+    def help(self):
+        pass
+
     def randomBoard(self):
         pass
 
-    def callback(self, event):  # function that performs an action on the label
+    def setfocus(self, event): # sets keyboard focus onto the pressed label
+        event.widget.focus_set()
+        event.widget.bind('<Key>', self.keypress) # binds the key event to the label to take keyboard input
+
+    def keypress(self, event):
         n = event.widget.num  # n is the x,y of the clicked label
         lab = self.lablist[n[0]][n[1]]  # which label was clicked
-        num = random.randint(1,9)
-        lab.configure(text=str(num))  # make mark on the graphical board
-
-        self.board[n[1]][n[0]] = num  # mark the logical board where player moved
-
+        num = int(event.char)
+        lab.configure(text=str(num))
+        self.board[n[1]][n[0]] = num
 
 if __name__ == "__main__":
     game = TTT()
+    game.title("Sudoku Solver")
+    game.configure(background='white')
     game.mainloop()
