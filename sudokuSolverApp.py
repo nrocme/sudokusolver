@@ -7,6 +7,13 @@ class TTT(Tk):
         res = [600,600]
         self.parent = Tk.__init__(self)
         self.lablist = []
+        self.helpmsg = \
+            "Overview - This program doubles as a sudoku game and a solver.\n\n " \
+            "To insert a number onto the board you must first\n click the spot on the board and then enter a digit from 1-9\n if the number 0 is input this clears that spot on the board\n\n" \
+            "Quit - Quits the program\t\t\t\t\t\t\n" \
+            "Reset - Resets the board\t\t\t\t\t\t\n" \
+            "Solve - Solves the current board and if its unsolvable it will display an error message\n" \
+            "Help - Displays a help message\t\t\t\t\t\n"
         canvas = Canvas(bg="white", height=res[0], width=res[1])
         canvas.pack()
         for row in range(9):
@@ -56,6 +63,29 @@ class TTT(Tk):
                 lab.configure(text=" ")
         self.board = np.zeros((9, 9), dtype=np.int8)
 
+    def help(self):
+        popup = Tk()
+        popup.wm_title("Help Menu")
+        label = Label(popup, text=self.helpmsg, font="helvetica")
+        label.pack(side="top", fill="x", pady=10)
+        popup.mainloop()
+
+    def randomBoard(self):
+        pass
+
+    def setfocus(self, event): # sets keyboard focus onto the pressed label
+        event.widget.focus_set()
+        event.widget.bind('<Key>', self.keypress) # binds the key event to the label to take keyboard input
+
+    def keypress(self, event):
+        n = event.widget.num  # n is the x,y of the clicked label
+        lab = self.lablist[n[0]][n[1]]  # which label was clicked
+        num = int(event.char)
+        if num == 0:
+            lab.configure(text="")
+        else:
+            lab.configure(text=str(num))
+        self.board[n[1]][n[0]] = num
 
     def solve(self):
         def isvalid(board):
@@ -102,23 +132,6 @@ class TTT(Tk):
         else:
             print("SUCCESS!")
             print(self.board)
-
-    def help(self):
-        pass
-
-    def randomBoard(self):
-        pass
-
-    def setfocus(self, event): # sets keyboard focus onto the pressed label
-        event.widget.focus_set()
-        event.widget.bind('<Key>', self.keypress) # binds the key event to the label to take keyboard input
-
-    def keypress(self, event):
-        n = event.widget.num  # n is the x,y of the clicked label
-        lab = self.lablist[n[0]][n[1]]  # which label was clicked
-        num = int(event.char)
-        lab.configure(text=str(num))
-        self.board[n[1]][n[0]] = num
 
 if __name__ == "__main__":
     game = TTT()
