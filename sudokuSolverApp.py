@@ -19,7 +19,7 @@ class TTT(Tk):
         for row in range(9):
             self.labrow = []
             for col in range(9):
-                lab = Label(text=" ", width=2, font=("Helvetica", 30), relief="sunken",bd= 4)
+                lab = Label(text=" ", width=2, font=("Helvetica", 30), relief="sunken",bd= 4, background = "white")
                 canvas.create_window(((row*res[1]//10)+42)+(row//3*19), ((col*res[1]//10)+42)+(col//3*19), window=lab)
                 lab.bind("<Button-1>", self.setfocus)
                 lab.num = [row, col]  # the integer that identifies the label
@@ -125,6 +125,8 @@ class TTT(Tk):
                     if (sodokusolve(board)):
                         return 1
                     board[coords[0]][coords[1]] = 0
+                    lab.configure(background="white")
+                    lab.update()
                 time.sleep(.01)
         if not sodokusolve(self.board):
             print("Board is unsolvable")
