@@ -90,7 +90,7 @@ class TTT(Tk):
                     return 0
         return 1
 
-    def sodokusolve(self, board):
+    def sudokusolve(self, board):
         coords = [0, 0]
         if self.isvalid(board) == 0:
             return 0
@@ -102,7 +102,7 @@ class TTT(Tk):
                 lab = self.lablist[coords[1]][coords[0]]  # which label was clicked
                 lab.configure(text=str(i))  # make mark on the graphical board
                 lab.update()
-                if self.sodokusolve(board):
+                if self.sudokusolve(board):
                     return 1
                 board[coords[0]][coords[1]] = 0
                 lab.configure(background="white")
@@ -140,7 +140,18 @@ class TTT(Tk):
                     board[coords[0]][coords[1]] = 0
                     lab.configure(background="white")
                     lab.update()
+        def removeSquares(board):
+            for i in range(len(board)):
+                for j in range(len(board)):
+                    if random.randint(0, 1):
+                        board[i][j] == 0
+                        lab = self.lablist[j][i]  # which label was clicked
+                        lab.configure(text=" ")  # make mark on the graphical board
+                        lab.update()
+                    
+            return
         generateBoard(self.board)
+        removeSquares(self.board)
 
     def setfocus(self, event):  # sets keyboard focus onto the pressed label
         global lastlab
@@ -167,7 +178,7 @@ class TTT(Tk):
         self.board[n[1]][n[0]] = int(num)
 
     def solve(self):
-        if not self.sodokusolve(self.board):
+        if not self.sudokusolve(self.board):
             print("Board is unsolvable")
             print(self.board)
         else:
