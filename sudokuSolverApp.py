@@ -31,6 +31,7 @@ class TTT(Tk):
                 self.labrow.append(lab)
             self.lablist.append(self.labrow)
             
+        # Creating the grid
         canvas.create_line(0, 0, res[1], 0, fill="black", width="20")
         canvas.create_line(0, 0, 0, res[1], fill="black", width="20")
         canvas.create_line(res[1], 0, res[1], res[1], fill="black", width="10")
@@ -144,9 +145,9 @@ class TTT(Tk):
             for i in range(len(board)):
                 for j in range(len(board)):
                     if random.randint(0, 1):
-                        board[i][j] == 0
+                        board[i][j] = 0
                         lab = self.lablist[j][i]  # which label was clicked
-                        lab.configure(text=" ")  # make mark on the graphical board
+                        lab.configure(text="")  # make mark on the graphical board
                         lab.update()
                     
             return
