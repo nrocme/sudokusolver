@@ -16,6 +16,8 @@ class TTT(Tk):
             "Reset - Resets the board\t\t\t\t\t\t\n" \
             "Solve - Solves the current board and if its unsolvable it will display an error message\n" \
             "Help - Displays a help message\t\t\t\t\t\n"
+        self.victorymsg = \
+            "VICTORY\n press the reset button to play again\n"
         canvas = Canvas(bg="white", height=75, width=600)
         canvas.create_text(300, 37, text="Sudoku Player", font=("Helvetica", 30))
         canvas.pack()
@@ -60,12 +62,13 @@ class TTT(Tk):
         canvas.create_window(100, 50, window=self.solveButton)
 
         self.helpButton = Button(text=" Help ", font=("Helvetica", 20),
-                           relief="groove", command=self.help)
+                           relief="groove", command= lambda: self.displaypopup(" Help ", self.helpmsg))
         canvas.create_window(500, 50, window=self.helpButton)
 
         self.randomBoardButton = Button(text=" Random Board ", font=("Helvetica", 20),
                            relief="groove", command=self.randomBoard)
         canvas.create_window(300, 50, window=self.randomBoardButton)
+
 
     def reset(self):
         for labrow in self.lablist:
@@ -73,13 +76,15 @@ class TTT(Tk):
                 lab.configure(text=" ")
         self.board = np.zeros((9, 9), dtype=np.int8)
 
-    def help(self):
+    
+    def displaypopup(self, title, msg):
         popup = Tk()
-        popup.wm_title("Help Menu")
-        label = Label(popup, text=self.helpmsg, font="helvetica")
+        popup.wm_title(title)
+        label = Label(popup, text=msg, font="helvetica")
         label.pack(side="top", fill="x", pady=10)
         popup.mainloop()
-
+        
+        
     def done(self, board, coords):
         # checks if the board is done if it finds a spot with a zero then we are not
         # done and this zero space is filled with a hopefully valid number
@@ -90,6 +95,7 @@ class TTT(Tk):
                     coords[1] = j
                     return 0
         return 1
+
 
     def sudokusolve(self, board):
         coords = [0, 0]
@@ -177,6 +183,8 @@ class TTT(Tk):
         else:
             lab.configure(text=str(num))
         self.board[n[1]][n[0]] = int(num)
+        if self.isvalid(self.board) == 1:
+            self.displaypopup("", self.victorymsg);
 
     def solve(self):
         if not self.sudokusolve(self.board):
